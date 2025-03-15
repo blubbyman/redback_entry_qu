@@ -20,3 +20,39 @@
 // Resources:
 // https://www.csselectronics.com/pages/can-bus-simple-intro-tutorial
 // https://www.csselectronics.com/pages/can-dbc-file-database-intro
+
+
+// steps to take to solve this problem
+
+int main() {
+    // scan in the candump.log file and initialise text output file
+    ifstream inputFile("candump.log");
+    ofstream outputFile("output.txt");
+
+    // reading the file line by line
+    string line, timestamp, canID, payload;
+
+    while (getline(inputFile, line)) {
+        istringstream iss(line);
+        iss >> timestamp >> canID >> payload;
+
+        // check if the canID is the one we are interested in
+        if (canID != "0x705") continue
+
+        int raw_value;
+        double decoded_value;
+
+        if (canID == "0x705") {
+            payload = line.substr(10, 16);
+            raw_value = stoi(payload, nullptr, 16);
+            decoded_value = raw_value * 0.1;
+        }
+
+        outputFile << "(" << timestamp << "): " << decoded_value << endl;
+    }
+
+    inputFile.close();
+    outputFile.close();
+    
+    return 0;
+}
