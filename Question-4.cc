@@ -22,12 +22,17 @@ class Actor;
 
 class Observer {
 public:
+	virtual ~Observer() = default;
 	virtual void ReactToEvent(Actor* actor) = 0;
+};
+
+class MockObserver : public Observer {
+public:
+	MOCK_METHOD(void, ReactToEvent, (Actor* actor), (override));
 };
 
 class Actor {
 	using ObserverPtr = std::shared_ptr<Observer>;
-
 	std::vector<ObserverPtr> mObservers;
 	int mCounter = 0;
 
@@ -42,7 +47,6 @@ public:
 
 	void EmitEvent() {
 		mCounter++;
-
 		for(auto & observer: mObservers) {
 			observer->ReactToEvent(this);
 		}
